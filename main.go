@@ -9,16 +9,14 @@ import (
 const base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 func main() {
-	toBase64("EDASDGUASDSADIASHDAHDHA")
+	toBase64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
 }
 
 func toBase64(input string) string {
-	var output = ""
-	fmt.Printf("Input: %v\n", input)
-	// convert to binary
 	binaryString := ""
 	for _, char := range input {
-		b := fmt.Sprintf("%08b", int64(char))
+		h, _ := strconv.ParseInt(string(char), 16, 8)
+		b := fmt.Sprintf("%04b", h)
 		binaryString = binaryString + b
 	}
 	fmt.Printf("Binary string: %v, length: %d\n", binaryString, len(binaryString))
@@ -40,10 +38,13 @@ func toBase64(input string) string {
 		fmt.Printf("%d ", number)
 	}
 	fmt.Printf("\nPadding: %d\n", padding)
+
 	// convert to base64
+	var output = ""
 	for _, number := range blocks {
 		output = output + string(base64Chars[number])
 	}
+
 	// add padding
 	output += strings.Repeat("=", padding)
 	fmt.Printf("Output: %v\n", output)
