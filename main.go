@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	"strconv"
 	"strings"
@@ -9,11 +10,21 @@ import (
 const base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 func main() {
-	xor := xor("1c0111001f010100061a024b53535009181c", "686974207468652062756c6c277320657965")
-	fmt.Printf("Xor: %v\n", xor)
+	for i := 0; i < 256; i++ {
+		decoded := decypherXor("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736", fmt.Sprintf("%x", i))
+		bs, _ := hex.DecodeString(decoded)
+		fmt.Printf("%x %v\n", i, string(bs)) // Cooking MC's like a pound of bacon, key - X (x58)
+	}
+	// xor := xor("1c0111001f010100061a024b53535009181c", "686974207468652062756c6c277320657965")
+	// fmt.Printf("Xor: %v\n", xor)
 	// output := toBase64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
 	// fmt.Printf("Output: %v\n", output)
 }
+
+func decypherXor(input string, char string) string {
+	return xor(input, strings.Repeat(char, len(input)))
+}
+
 func xor(input1 string, input2 string) string {
 	// X xor Y -> (X || Y) && !(X && Y)
 	output := ""
