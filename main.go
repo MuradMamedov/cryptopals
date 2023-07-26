@@ -9,7 +9,22 @@ import (
 const base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 func main() {
-	toBase64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
+	xor := xor("1c0111001f010100061a024b53535009181c", "686974207468652062756c6c277320657965")
+	fmt.Printf("Xor: %v\n", xor)
+	// output := toBase64("49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
+	// fmt.Printf("Output: %v\n", output)
+}
+func xor(input1 string, input2 string) string {
+	// X xor Y -> (X || Y) && !(X && Y)
+	output := ""
+	for i := 0; i < len(input1); i++ {
+		h1, _ := strconv.ParseInt(string(input1[i]), 16, 8)
+		h2, _ := strconv.ParseInt(string(input2[i]), 16, 8)
+		xor := (h1 | h2) & ^(h1 & h2)
+		output += strconv.FormatInt(xor, 16)
+	}
+
+	return output
 }
 
 func toBase64(input string) string {
@@ -47,6 +62,5 @@ func toBase64(input string) string {
 
 	// add padding
 	output += strings.Repeat("=", padding)
-	fmt.Printf("Output: %v\n", output)
 	return output
 }
